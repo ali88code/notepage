@@ -6,48 +6,8 @@
     <description>Recent content on My Name is ali88.It is my Hugo Host First.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 06 Mar 2016 01:24:51 -0500</lastBuildDate>
+    <lastBuildDate>Sun, 24 Jan 2016 09:03:05 -0500</lastBuildDate>
     <atom:link href="http://notepage.ali88.idv.tw/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Nginx_Fastcgi_Cache &#43; Lua 執行過程</title>
-      <link>http://notepage.ali88.idv.tw/NginxFastcgiCache/</link>
-      <pubDate>Sun, 06 Mar 2016 01:24:51 -0500</pubDate>
-      
-      <guid>http://notepage.ali88.idv.tw/NginxFastcgiCache/</guid>
-      <description>
-
-&lt;h1 id=&#34;nginx-proxy-cache:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;Nginx Proxy Cache&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;應用於Reverse Proxy,負載均衡&lt;/li&gt;
-&lt;li&gt;作用是緩存後端服務器的內容，可能是任何內容，包括靜態的和動態&lt;/li&gt;
-&lt;li&gt;另外,也可作正向代理 (Nginx 這邊支援 web proxy)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&#34;images/nginx_cache.jpeg&#34; alt=&#34;Nginx_Proxy_Cache&#34; title=&#34;Nginx_Proxy_Cache&#34; /&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;nginx-fastcgi-cache:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;Nginx Fastcgi Cache&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;proxy_cache 與 fastcgi_cache功能大至一樣。&lt;/li&gt;
-&lt;li&gt;用是緩存fastcgi生成的內容，很多情況是php生成的動態的內容。&lt;/li&gt;
-&lt;li&gt;緩存作用。減少了nginx與Application(php,python,cgi等等)通信的次數。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&#34;images/nginx_Fastcgi_cache.jpeg&#34; alt=&#34;Nginx_Fastcgi_Cache&#34; title=&#34;Nginx_Fastcgi_Cache&#34; /&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;參考資料:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;參考資料&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html&#34;&gt;Module ngx_http_fastcgi_module&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://czerasz.com/2015/03/30/nginx-caching-tutorial/&#34;&gt;Nginx Caching Tutorial - You Can Run Faster&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://blog.angryfox.com/?p=1930&#34;&gt;Nginx的緩存：proxy_cache和fastcgi_cache&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
     
     <item>
       <title>Hugo</title>
@@ -357,6 +317,46 @@ hugo server  --buildDrafts --theme=crisp --baseURL=&amp;quot;http://188.166.241.
 &lt;li&gt;&lt;a href=&#34;http://www-cs-students.stanford.edu/~blynn/gitmagic/intl/zh_tw/&#34;&gt;Git Magic - 繁體中文版&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://ascc.sinica.edu.tw/iascc/articals.php?_section=2.4&amp;amp;_op=?articalID:4811&#34;&gt;簡介 Git 及使用&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://zh.wikipedia.org/wiki/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6&#34;&gt;版本控制 - 維基百科，自由的百科全書&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Nginx_Fastcgi_Cache &#43; Lua 執行過程</title>
+      <link>http://notepage.ali88.idv.tw/NginxFastcgiCache/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://notepage.ali88.idv.tw/NginxFastcgiCache/</guid>
+      <description>
+
+&lt;h1 id=&#34;nginx-proxy-cache:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;Nginx Proxy Cache&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;應用於Reverse Proxy,負載均衡&lt;/li&gt;
+&lt;li&gt;作用是緩存後端服務器的內容，可能是任何內容，包括靜態的和動態&lt;/li&gt;
+&lt;li&gt;另外,也可作正向代理 (Nginx 這邊支援 web proxy)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;images/nginx_cache.jpeg&#34; alt=&#34;Nginx_Proxy_Cache&#34; title=&#34;Nginx_Proxy_Cache&#34; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;nginx-fastcgi-cache:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;Nginx Fastcgi Cache&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;proxy_cache 與 fastcgi_cache功能大至一樣。&lt;/li&gt;
+&lt;li&gt;用是緩存fastcgi生成的內容，很多情況是php生成的動態的內容。&lt;/li&gt;
+&lt;li&gt;緩存作用。減少了nginx與Application(php,python,cgi等等)通信的次數。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;images/nginx_Fastcgi_cache.jpeg&#34; alt=&#34;Nginx_Fastcgi_Cache&#34; title=&#34;Nginx_Fastcgi_Cache&#34; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;參考資料:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;參考資料&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html&#34;&gt;Module ngx_http_fastcgi_module&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://czerasz.com/2015/03/30/nginx-caching-tutorial/&#34;&gt;Nginx Caching Tutorial - You Can Run Faster&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://blog.angryfox.com/?p=1930&#34;&gt;Nginx的緩存：proxy_cache和fastcgi_cache&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
