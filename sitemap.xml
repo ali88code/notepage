@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://notepage.ali88.idv.tw/</loc>
+    <lastmod>2016-03-06T01:24:51-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://notepage.ali88.idv.tw/NginxFastcgiCache/</loc>
+    <lastmod>2016-03-06T01:24:51-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://notepage.ali88.idv.tw/hugo/</loc>
+    <lastmod>2016-01-24T09:03:05-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://notepage.ali88.idv.tw/gitT2/</loc>
+    <lastmod>2016-01-24T08:45:18-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://notepage.ali88.idv.tw/gitT/</loc>
+    <lastmod>2016-01-24T08:41:12-05:00</lastmod>
+  </url>
+  
+</urlset>
