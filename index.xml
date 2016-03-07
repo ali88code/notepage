@@ -376,11 +376,9 @@ hugo server  --buildDrafts --theme=crisp --baseURL=&amp;quot;http://188.166.241.
 
 &lt;h1 id=&#34;執行nginx-lua-之前-需要了解的一些事:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;執行Nginx + lua 之前 需要了解的一些事&lt;/h1&gt;
 
-&lt;ol&gt;
-&lt;li&gt;載入 lua 模組, 測試是否可以運作&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;1.&lt;/p&gt;
 
-&lt;p&gt;1-1.&lt;/p&gt;
+&lt;p&gt;1-1. 載入 lua 模組, 測試是否可以運作&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;    dso{
         	path /etc/nginx/modules/;
@@ -436,20 +434,73 @@ hugo server  --buildDrafts --theme=crisp --baseURL=&amp;quot;http://188.166.241.
 
 &lt;p&gt;&lt;img src=&#34;images/Http_Request_Nginx_small.png&#34; alt=&#34;Http請求處理流程圖&#34; title=&#34;Http_Request_Nginx&#34; /&gt;&lt;/p&gt;
 
-&lt;dl&gt;
-&lt;dt&gt;2-2. Handers模組 精細處理 Http 請求 ,分成 11 個階段處理。下表所列處理階段分別依序處理&lt;/dt&gt;
-&lt;dt&gt;:NGX_HTTP_POST_READ_PHASE:  讀取請求內容階段
-:NGX_HTTP_SERVER_REWRITE_PHASE: Server請求位址重寫階段
-:NGX_HTTP_FIND_CONFIG_PHASE:    配置查找階段:
-:NGX_HTTP_REWRITE_PHASE:    Location請求位址重寫階段
-:NGX_HTTP_POST_REWRITE_PHASE:   請求位址重寫提交階段
-:NGX_HTTP_PREACCESS_PHASE:  訪問許可權檢查準備階段
-:NGX_HTTP_ACCESS_PHASE:     訪問許可權檢查階段
-:NGX_HTTP_POST_ACCESS_PHASE:    訪問許可權檢查提交階段
-:NGX_HTTP_TRY_FILES_PHASE:  配置項try_files處理階段&lt;br /&gt;
-:NGX_HTTP_CONTENT_PHASE:    內容產生階段
-:NGX_HTTP_LOG_PHASE:            日誌模組處理階段&lt;/dt&gt;
-&lt;/dl&gt;
+&lt;p&gt;2-2. Handers模組 精細處理 Http 請求 ,分成 11 個階段處理。下表所列處理階段分別依序處理&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Handers階段&lt;/th&gt;
+&lt;th&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_POST_READ_PHAS&lt;/td&gt;
+&lt;td&gt;讀取請求內容階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_SERVER_REWRITE_PHASE&lt;/td&gt;
+&lt;td&gt;Server請求位址重寫階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_FIND_CONFIG_PHASE&lt;/td&gt;
+&lt;td&gt;配置查找階段:&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_REWRITE_PHASE&lt;/td&gt;
+&lt;td&gt;Location請求位址重寫階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_POST_REWRITE_PHASE&lt;/td&gt;
+&lt;td&gt;請求位址重寫提交階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_PREACCESS_PHASE&lt;/td&gt;
+&lt;td&gt;訪問許可權檢查準備階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_ACCESS_PHASE&lt;/td&gt;
+&lt;td&gt;訪問許可權檢查階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_POST_ACCESS_PHASE&lt;/td&gt;
+&lt;td&gt;訪問許可權檢查提交階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_TRY_FILES_PHASE&lt;/td&gt;
+&lt;td&gt;配置項try_files處理階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_CONTENT_PHASE&lt;/td&gt;
+&lt;td&gt;內容產生階段&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NGX_HTTP_LOG_PHASE&lt;/td&gt;
+&lt;td&gt;日誌模組處理階段&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 &lt;h1 id=&#34;ngx-http-memc-module-so-模組:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;ngx_http_memc_module.so 模組&lt;/h1&gt;
 
@@ -523,7 +574,7 @@ http{
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;   curl &#39;http://192.168.0.3/memt.html?cmd=get&amp;amp;key=andy&#39;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;自行撰寫lua流程說明:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;自行撰寫lua流程說明 #&lt;/h1&gt;
+&lt;h1 id=&#34;自行撰寫lua流程說明:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;自行撰寫lua流程說明&lt;/h1&gt;
 
 &lt;h1 id=&#34;簡單演示-及-問題說明:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;簡單演示 及 問題說明&lt;/h1&gt;
 

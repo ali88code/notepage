@@ -57,7 +57,7 @@
         },
         "datePublished": "0001-01-01",
         "description": "",
-        "wordCount":  346 
+        "wordCount":  348 
     }
     </script>
     
@@ -143,11 +143,9 @@
 
 <h1 id="執行nginx-lua-之前-需要了解的一些事:1246daae3ebb4ac275b8ba8e055bf6ad">執行Nginx + lua 之前 需要了解的一些事</h1>
 
-<ol>
-<li>載入 lua 模組, 測試是否可以運作</li>
-</ol>
+<p>1.</p>
 
-<p>1-1.</p>
+<p>1-1. 載入 lua 模組, 測試是否可以運作</p>
 
 <pre><code>    dso{
         	path /etc/nginx/modules/;
@@ -203,20 +201,73 @@
 
 <p><img src="images/Http_Request_Nginx_small.png" alt="Http請求處理流程圖" title="Http_Request_Nginx" /></p>
 
-<dl>
-<dt>2-2. Handers模組 精細處理 Http 請求 ,分成 11 個階段處理。下表所列處理階段分別依序處理</dt>
-<dt>:NGX_HTTP_POST_READ_PHASE:  讀取請求內容階段
-:NGX_HTTP_SERVER_REWRITE_PHASE: Server請求位址重寫階段
-:NGX_HTTP_FIND_CONFIG_PHASE:    配置查找階段:
-:NGX_HTTP_REWRITE_PHASE:    Location請求位址重寫階段
-:NGX_HTTP_POST_REWRITE_PHASE:   請求位址重寫提交階段
-:NGX_HTTP_PREACCESS_PHASE:  訪問許可權檢查準備階段
-:NGX_HTTP_ACCESS_PHASE:     訪問許可權檢查階段
-:NGX_HTTP_POST_ACCESS_PHASE:    訪問許可權檢查提交階段
-:NGX_HTTP_TRY_FILES_PHASE:  配置項try_files處理階段<br />
-:NGX_HTTP_CONTENT_PHASE:    內容產生階段
-:NGX_HTTP_LOG_PHASE:            日誌模組處理階段</dt>
-</dl>
+<p>2-2. Handers模組 精細處理 Http 請求 ,分成 11 個階段處理。下表所列處理階段分別依序處理</p>
+
+<table>
+<thead>
+<tr>
+<th>Handers階段</th>
+<th>說明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>NGX_HTTP_POST_READ_PHAS</td>
+<td>讀取請求內容階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_SERVER_REWRITE_PHASE</td>
+<td>Server請求位址重寫階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_FIND_CONFIG_PHASE</td>
+<td>配置查找階段:</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_REWRITE_PHASE</td>
+<td>Location請求位址重寫階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_POST_REWRITE_PHASE</td>
+<td>請求位址重寫提交階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_PREACCESS_PHASE</td>
+<td>訪問許可權檢查準備階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_ACCESS_PHASE</td>
+<td>訪問許可權檢查階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_POST_ACCESS_PHASE</td>
+<td>訪問許可權檢查提交階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_TRY_FILES_PHASE</td>
+<td>配置項try_files處理階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_CONTENT_PHASE</td>
+<td>內容產生階段</td>
+</tr>
+
+<tr>
+<td>NGX_HTTP_LOG_PHASE</td>
+<td>日誌模組處理階段</td>
+</tr>
+</tbody>
+</table>
 
 <h1 id="ngx-http-memc-module-so-模組:1246daae3ebb4ac275b8ba8e055bf6ad">ngx_http_memc_module.so 模組</h1>
 
@@ -290,7 +341,7 @@ http{
 <pre><code class="language-sh">   curl 'http://192.168.0.3/memt.html?cmd=get&amp;key=andy'
 </code></pre>
 
-<h1 id="自行撰寫lua流程說明:1246daae3ebb4ac275b8ba8e055bf6ad">自行撰寫lua流程說明 #</h1>
+<h1 id="自行撰寫lua流程說明:1246daae3ebb4ac275b8ba8e055bf6ad">自行撰寫lua流程說明</h1>
 
 <h1 id="簡單演示-及-問題說明:1246daae3ebb4ac275b8ba8e055bf6ad">簡單演示 及 問題說明</h1>
 
@@ -343,7 +394,7 @@ http{
           </a>
       </li>
 			<li class="linkedin">
-          <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://notepage.ali88.idv.tw/NginxFastcgiCache/&amp;title=Nginx_Fastcgi_Cache%20%2b%20Lua%20%e5%9f%b7%e8%a1%8c%e9%81%8e%e7%a8%8b&amp;summary=Nginx%20Proxy%20Cache%20%e6%87%89%e7%94%a8%e6%96%bcReverse%20Proxy%2c%e8%b2%a0%e8%bc%89%e5%9d%87%e8%a1%a1%20%e4%bd%9c%e7%94%a8%e6%98%af%e7%b7%a9%e5%ad%98%e5%be%8c%e7%ab%af%e6%9c%8d%e5%8b%99%e5%99%a8%e7%9a%84%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%8f%af%e8%83%bd%e6%98%af%e4%bb%bb%e4%bd%95%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%8c%85%e6%8b%ac%e9%9d%9c%e6%85%8b%e7%9a%84%e5%92%8c%e5%8b%95%e6%85%8b%20%e5%8f%a6%e5%a4%96%2c%e4%b9%9f%e5%8f%af%e4%bd%9c%e6%ad%a3%e5%90%91%e4%bb%a3%e7%90%86%20%28Nginx%20%e9%80%99%e9%82%8a%e6%94%af%e6%8f%b4%20web%20proxy%29%20Nginx%20Fastcgi%20Cache%20proxy_cache%20%e8%88%87%20fastcgi_cache%e5%8a%9f%e8%83%bd%e5%a4%a7%e8%87%b3%e4%b8%80%e6%a8%a3%e3%80%82%20%e7%94%a8%e6%98%af%e7%b7%a9%e5%ad%98fastcgi%e7%94%9f%e6%88%90%e7%9a%84%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%be%88%e5%a4%9a%e6%83%85%e6%b3%81%e6%98%afphp%e7%94%9f%e6%88%90%e7%9a%84%e5%8b%95%e6%85%8b%e7%9a%84%e5%85%a7%e5%ae%b9%e3%80%82%20%e7%b7%a9%e5%ad%98%e4%bd%9c%e7%94%a8%e3%80%82%e6%b8%9b%e5%b0%91%e4%ba%86nginx%e8%88%87Application%28php%2cpython%2ccgi%e7%ad%89%e7%ad%89%29%e9%80%9a%e4%bf%a1%e7%9a%84%e6%ac%a1%e6%95%b8%e3%80%82%20Nginx%20Cache%20%e9%81%8b%e4%bd%9c%e6%b5%81%e7%a8%8b%20Nginx%20%e9%99%a4%e4%ba%86%20work%20Process%20%e7%ae%a1%e7%90%86%20Http%20Request%20%e8%ab%8b%e6%b1%82%e7%ad%89%e5%85%b6%e4%bb%96%e5%b7%a5%e4%bd%9c%e5%a4%96%2cNginx%20Cache%20%e4%b9%9f%e7%94%b1%e5%8f%a6%e5%a4%96%e7%a8%8b%e5%ba%8f%e4%be%86%e4%bd%9c%e7%ae%a1%e7%90%86%e3%80%82%20Nginx%20Cache%20loader%20%e4%b8%bb%e8%a6%81Nginx%20%e4%b8%80%e9%96%8b%e5%a7%8b%e5%88%9d%e5%a7%8b%e5%8c%96%e6%99%82%2c%e6%9c%89%e5%91%bc%e5%8f%abNginx%20Cache%20%e7%9b%b8%e9%97%9c%e6%a8%a1%e7%b5%84%2cNginx%20master%20process%20%e6%9c%83%20fork%20Nginx%20Cache%20loader%20%e5%8e%bb%e6%8a%93%e5%8f%96%20Nginx%20Cache%20Store%28cache%20%e5%84%b2%e5%ad%98%e5%8d%80%29%2c%e4%be%86%e9%87%8d%e6%96%b0%e5%bb%ba%e7%ab%8b%e7%b4%a2%e5%bc%95%28hash%20key%29%e4%b8%a6%e5%ad%98%e6%94%be%e5%9c%a8memory%20%e4%b8%ad%2c%20%e5%bb%ba%e7%ab%8b%e5%ae%8c%e6%88%90%e5%be%8c%2c%20Cache%20loader%20process%20%e5%b0%b1%e9%9a%a8%e5%8d%b3%e7%b5%90%e6%9d%9f%e3%80%82%20Nginx%20Cache%20mamager%20%e4%b8%bb%e8%a6%81%e6%8e%a5%e5%8f%97%20master%20process%20%e6%8c%87%e4%bb%a4%20%e5%8e%bb%e7%ae%a1%e7%90%86%20Nginx%20Cache%20%e5%a4%a7%e5%b0%8f%e4%ba%8b%e5%8b%99%2c%e5%83%8f%e6%98%af%20Hash%20key%20%e9%81%8e%e6%9c%9f%2c%e6%88%96%e6%98%af%e6%90%9c%e5%b0%8b%20%e6%ad%a4%e7%ad%86%e8%b3%87%e6%96%99%e6%98%af%e5%90%a6%e5%ad%98%e6%94%be%e5%9c%a8%20cache%20%e5%84%b2%e5%ad%98%e5%8d%80%e4%b8%ad%20%e7%ad%89%e5%b7%a5%e4%bd%9c%e3%80%82%20Nginx%20Fastcgi%20Cache%20%e7%b0%a1%e8%a6%81%e5%8f%83%e6%95%b8%e8%aa%aa%e6%98%8e%20%e5%9f%b7%e8%a1%8cNginx%20%2b%20lua%20%e4%b9%8b%e5%89%8d%20%e9%9c%80%e8%a6%81%e4%ba%86%e8%a7%a3%e7%9a%84%e4%b8%80%e4%ba%9b%e4%ba%8b%20%e8%bc%89%e5%85%a5%20lua%20%e6%a8%a1%e7%b5%84%2c%20%e6%b8%ac%e8%a9%a6%e6%98%af%e5%90%a6%e5%8f%af%e4%bb%a5%e9%81%8b%e4%bd%9c%201-1...." class="popup">
+          <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://notepage.ali88.idv.tw/NginxFastcgiCache/&amp;title=Nginx_Fastcgi_Cache%20%2b%20Lua%20%e5%9f%b7%e8%a1%8c%e9%81%8e%e7%a8%8b&amp;summary=Nginx%20Proxy%20Cache%20%e6%87%89%e7%94%a8%e6%96%bcReverse%20Proxy%2c%e8%b2%a0%e8%bc%89%e5%9d%87%e8%a1%a1%20%e4%bd%9c%e7%94%a8%e6%98%af%e7%b7%a9%e5%ad%98%e5%be%8c%e7%ab%af%e6%9c%8d%e5%8b%99%e5%99%a8%e7%9a%84%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%8f%af%e8%83%bd%e6%98%af%e4%bb%bb%e4%bd%95%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%8c%85%e6%8b%ac%e9%9d%9c%e6%85%8b%e7%9a%84%e5%92%8c%e5%8b%95%e6%85%8b%20%e5%8f%a6%e5%a4%96%2c%e4%b9%9f%e5%8f%af%e4%bd%9c%e6%ad%a3%e5%90%91%e4%bb%a3%e7%90%86%20%28Nginx%20%e9%80%99%e9%82%8a%e6%94%af%e6%8f%b4%20web%20proxy%29%20Nginx%20Fastcgi%20Cache%20proxy_cache%20%e8%88%87%20fastcgi_cache%e5%8a%9f%e8%83%bd%e5%a4%a7%e8%87%b3%e4%b8%80%e6%a8%a3%e3%80%82%20%e7%94%a8%e6%98%af%e7%b7%a9%e5%ad%98fastcgi%e7%94%9f%e6%88%90%e7%9a%84%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%be%88%e5%a4%9a%e6%83%85%e6%b3%81%e6%98%afphp%e7%94%9f%e6%88%90%e7%9a%84%e5%8b%95%e6%85%8b%e7%9a%84%e5%85%a7%e5%ae%b9%e3%80%82%20%e7%b7%a9%e5%ad%98%e4%bd%9c%e7%94%a8%e3%80%82%e6%b8%9b%e5%b0%91%e4%ba%86nginx%e8%88%87Application%28php%2cpython%2ccgi%e7%ad%89%e7%ad%89%29%e9%80%9a%e4%bf%a1%e7%9a%84%e6%ac%a1%e6%95%b8%e3%80%82%20Nginx%20Cache%20%e9%81%8b%e4%bd%9c%e6%b5%81%e7%a8%8b%20Nginx%20%e9%99%a4%e4%ba%86%20work%20Process%20%e7%ae%a1%e7%90%86%20Http%20Request%20%e8%ab%8b%e6%b1%82%e7%ad%89%e5%85%b6%e4%bb%96%e5%b7%a5%e4%bd%9c%e5%a4%96%2cNginx%20Cache%20%e4%b9%9f%e7%94%b1%e5%8f%a6%e5%a4%96%e7%a8%8b%e5%ba%8f%e4%be%86%e4%bd%9c%e7%ae%a1%e7%90%86%e3%80%82%20Nginx%20Cache%20loader%20%e4%b8%bb%e8%a6%81Nginx%20%e4%b8%80%e9%96%8b%e5%a7%8b%e5%88%9d%e5%a7%8b%e5%8c%96%e6%99%82%2c%e6%9c%89%e5%91%bc%e5%8f%abNginx%20Cache%20%e7%9b%b8%e9%97%9c%e6%a8%a1%e7%b5%84%2cNginx%20master%20process%20%e6%9c%83%20fork%20Nginx%20Cache%20loader%20%e5%8e%bb%e6%8a%93%e5%8f%96%20Nginx%20Cache%20Store%28cache%20%e5%84%b2%e5%ad%98%e5%8d%80%29%2c%e4%be%86%e9%87%8d%e6%96%b0%e5%bb%ba%e7%ab%8b%e7%b4%a2%e5%bc%95%28hash%20key%29%e4%b8%a6%e5%ad%98%e6%94%be%e5%9c%a8memory%20%e4%b8%ad%2c%20%e5%bb%ba%e7%ab%8b%e5%ae%8c%e6%88%90%e5%be%8c%2c%20Cache%20loader%20process%20%e5%b0%b1%e9%9a%a8%e5%8d%b3%e7%b5%90%e6%9d%9f%e3%80%82%20Nginx%20Cache%20mamager%20%e4%b8%bb%e8%a6%81%e6%8e%a5%e5%8f%97%20master%20process%20%e6%8c%87%e4%bb%a4%20%e5%8e%bb%e7%ae%a1%e7%90%86%20Nginx%20Cache%20%e5%a4%a7%e5%b0%8f%e4%ba%8b%e5%8b%99%2c%e5%83%8f%e6%98%af%20Hash%20key%20%e9%81%8e%e6%9c%9f%2c%e6%88%96%e6%98%af%e6%90%9c%e5%b0%8b%20%e6%ad%a4%e7%ad%86%e8%b3%87%e6%96%99%e6%98%af%e5%90%a6%e5%ad%98%e6%94%be%e5%9c%a8%20cache%20%e5%84%b2%e5%ad%98%e5%8d%80%e4%b8%ad%20%e7%ad%89%e5%b7%a5%e4%bd%9c%e3%80%82%20Nginx%20Fastcgi%20Cache%20%e7%b0%a1%e8%a6%81%e5%8f%83%e6%95%b8%e8%aa%aa%e6%98%8e%20%e5%9f%b7%e8%a1%8cNginx%20%2b%20lua%20%e4%b9%8b%e5%89%8d%20%e9%9c%80%e8%a6%81%e4%ba%86%e8%a7%a3%e7%9a%84%e4%b8%80%e4%ba%9b%e4%ba%8b%201...." class="popup">
               <span class="icon">
                   <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve">
                       <path d="M25.424,15.887v8.447h-4.896v-7.882c0-1.979-0.709-3.331-2.48-3.331c-1.354,0-2.158,0.911-2.514,1.803 c-0.129,0.315-0.162,0.753-0.162,1.194v8.216h-4.899c0,0,0.066-13.349,0-14.731h4.899v2.088c-0.01,0.016-0.023,0.032-0.033,0.048 h0.033V11.69c0.65-1.002,1.812-2.435,4.414-2.435C23.008,9.254,25.424,11.361,25.424,15.887z M5.348,2.501 c-1.676,0-2.772,1.092-2.772,2.539c0,1.421,1.066,2.538,2.717,2.546h0.032c1.709,0,2.771-1.132,2.771-2.546 C8.054,3.593,7.019,2.501,5.343,2.501H5.348z M2.867,24.334h4.897V9.603H2.867V24.334z"/>
