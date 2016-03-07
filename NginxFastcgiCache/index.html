@@ -57,7 +57,7 @@
         },
         "datePublished": "0001-01-01",
         "description": "",
-        "wordCount":  342 
+        "wordCount":  368 
     }
     </script>
     
@@ -349,6 +349,30 @@ http{
 <h1 id="自行撰寫lua流程說明:1246daae3ebb4ac275b8ba8e055bf6ad">自行撰寫lua流程說明</h1>
 
 <h1 id="簡單演示-及-問題說明:1246daae3ebb4ac275b8ba8e055bf6ad">簡單演示 及 問題說明</h1>
+
+<h2 id="演示:1246daae3ebb4ac275b8ba8e055bf6ad">演示</h2>
+
+<h2 id="問題說明:1246daae3ebb4ac275b8ba8e055bf6ad">問題說明</h2>
+
+<ul>
+<li>說明背景:</li>
+</ul>
+
+<pre><code>http://220.229.227.26/other_sport/A0017_0050/om/ 
+http://220.229.227.26/other_sport/A0017_0050/wlb/
+兩個位址都在同一個DocumentRoot /var/www/html/other_sport/A0017_0050/
+兩個位址都在同一個Nginx設定檔中 /etc/nginx/conf.d/00-default.conf
+</code></pre>
+
+<ul>
+<li>產生問題執行:</li>
+</ul>
+
+<pre><code>用Firefox 瀏覽此url 並登入 http://220.229.227.26/other_sport/A0017_0050/om/
+執行設定會被cache的url http://220.229.227.26/other_sport/A0017_0050/om/league-listing.php (看 /var/log/nginx/localhost-demo_cache-access.log 是否有hit到,有被Hit到 就馬上執行第三步驟)
+用IE 瀏覽此url 並登入 http://220.229.227.26/other_sport/A0017_0050/wlb/
+再瀏覽此url http://220.229.227.26/other_sport/A0017_0050/om/league-listing.php,就發生未登入即可以抓取的到頁面。
+</code></pre>
 
 <h1 id="參考資料:1246daae3ebb4ac275b8ba8e055bf6ad">參考資料</h1>
 

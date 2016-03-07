@@ -583,6 +583,30 @@ http{
 
 &lt;h1 id=&#34;簡單演示-及-問題說明:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;簡單演示 及 問題說明&lt;/h1&gt;
 
+&lt;h2 id=&#34;演示:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;演示&lt;/h2&gt;
+
+&lt;h2 id=&#34;問題說明:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;問題說明&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;說明背景:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;http://220.229.227.26/other_sport/A0017_0050/om/ 
+http://220.229.227.26/other_sport/A0017_0050/wlb/
+兩個位址都在同一個DocumentRoot /var/www/html/other_sport/A0017_0050/
+兩個位址都在同一個Nginx設定檔中 /etc/nginx/conf.d/00-default.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;產生問題執行:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;用Firefox 瀏覽此url 並登入 http://220.229.227.26/other_sport/A0017_0050/om/
+執行設定會被cache的url http://220.229.227.26/other_sport/A0017_0050/om/league-listing.php (看 /var/log/nginx/localhost-demo_cache-access.log 是否有hit到,有被Hit到 就馬上執行第三步驟)
+用IE 瀏覽此url 並登入 http://220.229.227.26/other_sport/A0017_0050/wlb/
+再瀏覽此url http://220.229.227.26/other_sport/A0017_0050/om/league-listing.php,就發生未登入即可以抓取的到頁面。
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h1 id=&#34;參考資料:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;參考資料&lt;/h1&gt;
 
 &lt;ul&gt;
