@@ -376,9 +376,9 @@ hugo server  --buildDrafts --theme=crisp --baseURL=&amp;quot;http://188.166.241.
 
 &lt;h1 id=&#34;執行nginx-lua-之前-需要了解的一些事:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;執行Nginx + lua 之前 需要了解的一些事&lt;/h1&gt;
 
-&lt;p&gt;1.&lt;/p&gt;
+&lt;h3 id=&#34;載入-lua-模組-測試是否可以運作:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;載入 lua 模組, 測試是否可以運作&lt;/h3&gt;
 
-&lt;p&gt;1-1. 載入 lua 模組, 測試是否可以運作&lt;/p&gt;
+&lt;p&gt;1-1.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;    dso{
         	path /etc/nginx/modules/;
@@ -421,16 +421,21 @@ hugo server  --buildDrafts --theme=crisp --baseURL=&amp;quot;http://188.166.241.
 	}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;ol&gt;
-&lt;li&gt;Nginx hander處理模組將 http request 劃分11個階段來處理,及了解每個階段執行順序。&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3 id=&#34;nginx-hander處理模組將-http-request-劃分11個階段來處理-及了解每個階段執行順序:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;Nginx hander處理模組將 http request 劃分11個階段來處理,及了解每個階段執行順序。&lt;/h3&gt;
 
-&lt;p&gt;2-1.
-  - 先由Nginx核心 讀取 http Header
-  - 根據Nginx設定檔,Nginx 核心 挑選一個Hander模組 處理 Http 請求 ,並將 http Header 交給 Hander 模組
-  - 由Hander 模組 讀取 Http Body ,並處理好 Http 請求
-  - Hander 模組處理Http 請求後,再 發送給 Fliters 模組處理。
-  - Fliter 模組處理好後,再發送給客戶端&lt;/p&gt;
+&lt;p&gt;2-1.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;先由Nginx核心 讀取 http Header&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;根據Nginx設定檔,Nginx 核心 挑選一個Hander模組 處理 Http 請求 ,並將 http Header 交給 Hander 模組&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;由Hander 模組 讀取 Http Body ,並處理好 Http 請求&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Hander 模組處理Http 請求後,再 發送給 Fliters 模組處理。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Fliter 模組處理好後,再發送給客戶端&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;&lt;img src=&#34;images/Http_Request_Nginx_small.png&#34; alt=&#34;Http請求處理流程圖&#34; title=&#34;Http_Request_Nginx&#34; /&gt;&lt;/p&gt;
 
