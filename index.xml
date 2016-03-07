@@ -349,6 +349,27 @@ hugo server  --buildDrafts --theme=crisp --baseURL=&amp;quot;http://188.166.241.
 
 &lt;p&gt;&lt;img src=&#34;images/nginx_Fastcgi_cache.jpeg&#34; alt=&#34;Nginx_Fastcgi_Cache&#34; title=&#34;Nginx_Fastcgi_Cache&#34; /&gt;&lt;/p&gt;
 
+&lt;h1 id=&#34;nginx-cache-運作流程:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;Nginx Cache 運作流程&lt;/h1&gt;
+
+&lt;p&gt;Nginx 除了 work Process 管理 Http Request 請求等其他工作外,Nginx Cache 也由另外程序來作管理。&lt;/p&gt;
+
+&lt;p&gt;*. Nginx Cache loader&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;主要Nginx 一開始初始化時,有呼叫Nginx Cache 相關模組,Nginx master process 會 fork Nginx Cache loader 去抓取 Nginx Cache Store(cache 儲存區),來重新建立索引(hash key)並存放在memory 中,
+   建立完成後, Cache loader process 就隨即結束。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;*. Nginx Cache mamager&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;主要接受 master process 指令 去管理 Nginx Cache 大小事務,像是 Hash key 過期,或是搜尋 此筆資料是否存放在 cache 儲存區中 等工作。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;images/cache1-4_small.jpeg&#34; alt=&#34;Ngnx Cache運作流程&#34; title=&#34;Nginx_Cache&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;images/60.26_master_worker_cachemanager_process.PNG&#34; alt=&#34;Ngnx Cache Manager&#34; title=&#34;Nginx_Cache_Manager&#34; /&gt;&lt;/p&gt;
+
 &lt;h1 id=&#34;參考資料:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;參考資料&lt;/h1&gt;
 
 &lt;ul&gt;
@@ -357,6 +378,12 @@ hugo server  --buildDrafts --theme=crisp --baseURL=&amp;quot;http://188.166.241.
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://czerasz.com/2015/03/30/nginx-caching-tutorial/&#34;&gt;Nginx Caching Tutorial - You Can Run Faster&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://blog.angryfox.com/?p=1930&#34;&gt;Nginx的緩存：proxy_cache和fastcgi_cache&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://281816327.blog.51cto.com/907015/1619920&#34;&gt;Nginx模塊和請求處理流程簡介&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/chiamingyen/nginxProject/blob/master/nginxProject/source/chapter_3.rst&#34;&gt;handler模組的掛載&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.pylist.com/topic/1445510269&#34;&gt;nginx與lua的執行順序和步驟說明&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
