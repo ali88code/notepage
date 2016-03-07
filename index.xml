@@ -374,6 +374,113 @@ hugo server  --buildDrafts --theme=crisp --baseURL=&amp;quot;http://188.166.241.
 
 &lt;h1 id=&#34;nginx-fastcgi-cache-簡要參數說明:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;Nginx Fastcgi Cache 簡要參數說明&lt;/h1&gt;
 
+&lt;pre&gt;&lt;code&gt;http{
+....
+fastcgi_cache_path /dev/shm/fastcgicache levels=1:2 keys_zone=democache:10m  max_size=1000m inactive=60s;
+server {
+...
+	location ~  ^/other_sport/A0017_0050/(.*) {
+		access_log /var/log/nginx/localhost-demo_cache-access.log  main;
+		error_log  /var/log/nginx/localhost-demo_cache-error.log;
+		try_files	$uri	$uri/  =404;
+    	        fastcgi_pass    127.0.0.1:9001;
+    	        fastcgi_index   index.php;
+    	        include         fastcgi_params;
+		set $prefix_fastcgi_name  $1;
+		if ($query_string != &amp;quot;&amp;quot;){ set $prefix_fastcgi_name $1?$query_string;}
+		
+		include	    /etc/nginx/conf.d/skip_cache_new;
+		fastcgi_cache_key &amp;quot;$scheme$request_method$host$request_uri&amp;quot;;
+		fastcgi_cache_use_stale error timeout invalid_header http_500;
+		fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
+		
+		fastcgi_cache_bypass $skip_cache;
+		fastcgi_no_cache $skip_cache;
+		fastcgi_cache democache;
+		fastcgi_cache_valid  1m;
+
+	}
+....
+
+    location /123.html {
+	internal;
+	set  $memc_cmd $arg_cmd;
+        set $memc_key  $arg_key;
+        memc_pass 127.0.0.1:11211;
+
+    }
+
+
+}
+
+....
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;fastcgi-cache-path:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_cache_path&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;/dev/shm/fastcgicache   &lt;strong&gt;儲存cache的地方&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;levels=1:2          &lt;strong&gt;設定目錄階層&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;/dev/shm/fastcgicache
+|-- 1
+|   `-- a7
+|       `-- a5225f331f10bbe6099bfe0e48e82a71
+|-- 6
+|   `-- 8f
+`-- a
+    `-- fe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;keys_zone=democache:10m                   **為cache 空間設定名字為 democache , 此空間10MB  **&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;max_size=1000m                     &lt;strong&gt;最大使用1G空間&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;inactive=60s                      &lt;strong&gt;cache 1分鐘&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;fastcgi-cache-key:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_cache_key&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;將 &amp;ldquo;$scheme$request_method$host$request_uri&amp;rdquo; 用MD5方法來 當作 hash key&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;fastcgi-cache:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_cache&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;指定 key_zone 名字為 democache&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;參數: inactive  ,指在一段時間內文件沒被存取使用,就會被緩存管理器自動刪除。 ,預設 10m(10分鐘)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;fastcgi-cache-valid:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_cache_valid&lt;/h3&gt;
+
+&lt;p&gt;指定接收到回應程式 的 http code 快取時間&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;fastcgi_cache_valid [http code &amp;hellip;] time;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;若只有指定時間。預設只有 http code  :200, 301, and 302 等回應狀態會被快取
+ex: 當Nginx 收到回應程式 http 狀態碼 200 時,就快取 1 小時&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;fastcgi-no-cache:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_no_cache&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;不等於空值 及 值不等於 0 都不被 cache。 &lt;strong&gt;只要是 0 或 空值 就指定 cache&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;fastcgi-cache-bypass:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_cache_bypass&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;不等於空值 及 值不等於 0 ,即是 不從cache區 回應資料給Client端,而是 By_Pass 到後端 。 &lt;strong&gt;只要是 0 或 空值 就指定 cache&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h1 id=&#34;執行nginx-lua-之前-需要了解的一些事:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;執行Nginx + lua 之前 需要了解的一些事&lt;/h1&gt;
 
 &lt;h3 id=&#34;載入-lua-模組-測試是否可以運作:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;載入 lua 模組, 測試是否可以運作&lt;/h3&gt;
@@ -581,6 +688,18 @@ http{
 
 &lt;h1 id=&#34;自行撰寫lua流程說明:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;自行撰寫lua流程說明&lt;/h1&gt;
 
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;先判斷是否有 帶 cookie ; 若沒帶 則 By_Pass 後端php-cgi處理&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;再確定 cookie 是否有帶 &amp;ldquo;WEBSESSID=&amp;rdquo; 字串 ; 若沒帶 則 By_Pass 後端php-cgi處理&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;有帶cookie , 利用(memcached API For Nginx) 讀取 cookie值&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;確定cookie 值的內容 是否有帶登入資訊 ;若沒帶 則By_Pass 後端php-cgi處理&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;有帶登入資訊, 是否為列表要cache 的對象 ; 若不是 則By_Pass 後端php-cgi處理&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h1 id=&#34;簡單演示-及-問題說明:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;簡單演示 及 問題說明&lt;/h1&gt;
 
 &lt;h2 id=&#34;演示:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;演示&lt;/h2&gt;
@@ -621,6 +740,10 @@ http://220.229.227.26/other_sport/A0017_0050/wlb/
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/chiamingyen/nginxProject/blob/master/nginxProject/source/chapter_3.rst&#34;&gt;handler模組的掛載&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.pylist.com/topic/1445510269&#34;&gt;nginx與lua的執行順序和步驟說明&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/openresty/lua-nginx-module#nginx-api-for-lua&#34;&gt;Nginx API for Lua&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.pureage.info/2013/09/02/125.html&#34;&gt;nil、null與ngx.null&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

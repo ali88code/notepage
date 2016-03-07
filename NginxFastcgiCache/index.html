@@ -57,7 +57,7 @@
         },
         "datePublished": "0001-01-01",
         "description": "",
-        "wordCount":  368 
+        "wordCount":  601 
     }
     </script>
     
@@ -140,6 +140,113 @@
 <p><img src="images/60.26_master_worker_cachemanager_process.PNG" alt="Ngnx Cache Manager" title="Nginx_Cache_Manager" /></p>
 
 <h1 id="nginx-fastcgi-cache-簡要參數說明:1246daae3ebb4ac275b8ba8e055bf6ad">Nginx Fastcgi Cache 簡要參數說明</h1>
+
+<pre><code>http{
+....
+fastcgi_cache_path /dev/shm/fastcgicache levels=1:2 keys_zone=democache:10m  max_size=1000m inactive=60s;
+server {
+...
+	location ~  ^/other_sport/A0017_0050/(.*) {
+		access_log /var/log/nginx/localhost-demo_cache-access.log  main;
+		error_log  /var/log/nginx/localhost-demo_cache-error.log;
+		try_files	$uri	$uri/  =404;
+    	        fastcgi_pass    127.0.0.1:9001;
+    	        fastcgi_index   index.php;
+    	        include         fastcgi_params;
+		set $prefix_fastcgi_name  $1;
+		if ($query_string != &quot;&quot;){ set $prefix_fastcgi_name $1?$query_string;}
+		
+		include	    /etc/nginx/conf.d/skip_cache_new;
+		fastcgi_cache_key &quot;$scheme$request_method$host$request_uri&quot;;
+		fastcgi_cache_use_stale error timeout invalid_header http_500;
+		fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
+		
+		fastcgi_cache_bypass $skip_cache;
+		fastcgi_no_cache $skip_cache;
+		fastcgi_cache democache;
+		fastcgi_cache_valid  1m;
+
+	}
+....
+
+    location /123.html {
+	internal;
+	set  $memc_cmd $arg_cmd;
+        set $memc_key  $arg_key;
+        memc_pass 127.0.0.1:11211;
+
+    }
+
+
+}
+
+....
+}
+
+</code></pre>
+
+<h3 id="fastcgi-cache-path:1246daae3ebb4ac275b8ba8e055bf6ad">fastcgi_cache_path</h3>
+
+<ul>
+<li><p>/dev/shm/fastcgicache   <strong>儲存cache的地方</strong></p></li>
+
+<li><p>levels=1:2          <strong>設定目錄階層</strong></p></li>
+</ul>
+
+<pre><code>/dev/shm/fastcgicache
+|-- 1
+|   `-- a7
+|       `-- a5225f331f10bbe6099bfe0e48e82a71
+|-- 6
+|   `-- 8f
+`-- a
+    `-- fe
+</code></pre>
+
+<ul>
+<li><p>keys_zone=democache:10m                   **為cache 空間設定名字為 democache , 此空間10MB  **</p></li>
+
+<li><p>max_size=1000m                     <strong>最大使用1G空間</strong></p></li>
+
+<li><p>inactive=60s                      <strong>cache 1分鐘</strong></p></li>
+</ul>
+
+<h3 id="fastcgi-cache-key:1246daae3ebb4ac275b8ba8e055bf6ad">fastcgi_cache_key</h3>
+
+<ul>
+<li>將 &ldquo;$scheme$request_method$host$request_uri&rdquo; 用MD5方法來 當作 hash key</li>
+</ul>
+
+<h3 id="fastcgi-cache:1246daae3ebb4ac275b8ba8e055bf6ad">fastcgi_cache</h3>
+
+<ul>
+<li><p>指定 key_zone 名字為 democache</p></li>
+
+<li><p>參數: inactive  ,指在一段時間內文件沒被存取使用,就會被緩存管理器自動刪除。 ,預設 10m(10分鐘)</p></li>
+</ul>
+
+<h3 id="fastcgi-cache-valid:1246daae3ebb4ac275b8ba8e055bf6ad">fastcgi_cache_valid</h3>
+
+<p>指定接收到回應程式 的 http code 快取時間</p>
+
+<ul>
+<li><p>fastcgi_cache_valid [http code &hellip;] time;</p></li>
+
+<li><p>若只有指定時間。預設只有 http code  :200, 301, and 302 等回應狀態會被快取
+ex: 當Nginx 收到回應程式 http 狀態碼 200 時,就快取 1 小時</p></li>
+</ul>
+
+<h3 id="fastcgi-no-cache:1246daae3ebb4ac275b8ba8e055bf6ad">fastcgi_no_cache</h3>
+
+<ul>
+<li>不等於空值 及 值不等於 0 都不被 cache。 <strong>只要是 0 或 空值 就指定 cache</strong></li>
+</ul>
+
+<h3 id="fastcgi-cache-bypass:1246daae3ebb4ac275b8ba8e055bf6ad">fastcgi_cache_bypass</h3>
+
+<ul>
+<li>不等於空值 及 值不等於 0 ,即是 不從cache區 回應資料給Client端,而是 By_Pass 到後端 。 <strong>只要是 0 或 空值 就指定 cache</strong></li>
+</ul>
 
 <h1 id="執行nginx-lua-之前-需要了解的一些事:1246daae3ebb4ac275b8ba8e055bf6ad">執行Nginx + lua 之前 需要了解的一些事</h1>
 
@@ -348,6 +455,18 @@ http{
 
 <h1 id="自行撰寫lua流程說明:1246daae3ebb4ac275b8ba8e055bf6ad">自行撰寫lua流程說明</h1>
 
+<ul>
+<li><p>先判斷是否有 帶 cookie ; 若沒帶 則 By_Pass 後端php-cgi處理</p></li>
+
+<li><p>再確定 cookie 是否有帶 &ldquo;WEBSESSID=&rdquo; 字串 ; 若沒帶 則 By_Pass 後端php-cgi處理</p></li>
+
+<li><p>有帶cookie , 利用(memcached API For Nginx) 讀取 cookie值</p></li>
+
+<li><p>確定cookie 值的內容 是否有帶登入資訊 ;若沒帶 則By_Pass 後端php-cgi處理</p></li>
+
+<li><p>有帶登入資訊, 是否為列表要cache 的對象 ; 若不是 則By_Pass 後端php-cgi處理</p></li>
+</ul>
+
 <h1 id="簡單演示-及-問題說明:1246daae3ebb4ac275b8ba8e055bf6ad">簡單演示 及 問題說明</h1>
 
 <h2 id="演示:1246daae3ebb4ac275b8ba8e055bf6ad">演示</h2>
@@ -388,6 +507,10 @@ http://220.229.227.26/other_sport/A0017_0050/wlb/
 <li><p><a href="https://github.com/chiamingyen/nginxProject/blob/master/nginxProject/source/chapter_3.rst">handler模組的掛載</a></p></li>
 
 <li><p><a href="http://www.pylist.com/topic/1445510269">nginx與lua的執行順序和步驟說明</a></p></li>
+
+<li><p><a href="https://github.com/openresty/lua-nginx-module#nginx-api-for-lua">Nginx API for Lua</a></p></li>
+
+<li><p><a href="http://www.pureage.info/2013/09/02/125.html">nil、null與ngx.null</a></p></li>
 </ul>
 
     <div id="social-bar">
@@ -423,7 +546,7 @@ http://220.229.227.26/other_sport/A0017_0050/wlb/
           </a>
       </li>
 			<li class="linkedin">
-          <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://notepage.ali88.idv.tw/NginxFastcgiCache/&amp;title=Nginx_Fastcgi_Cache%20%2b%20Lua%20%e5%9f%b7%e8%a1%8c%e9%81%8e%e7%a8%8b&amp;summary=Nginx%20Proxy%20Cache%20%e6%87%89%e7%94%a8%e6%96%bcReverse%20Proxy%2c%e8%b2%a0%e8%bc%89%e5%9d%87%e8%a1%a1%20%e4%bd%9c%e7%94%a8%e6%98%af%e7%b7%a9%e5%ad%98%e5%be%8c%e7%ab%af%e6%9c%8d%e5%8b%99%e5%99%a8%e7%9a%84%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%8f%af%e8%83%bd%e6%98%af%e4%bb%bb%e4%bd%95%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%8c%85%e6%8b%ac%e9%9d%9c%e6%85%8b%e7%9a%84%e5%92%8c%e5%8b%95%e6%85%8b%20%e5%8f%a6%e5%a4%96%2c%e4%b9%9f%e5%8f%af%e4%bd%9c%e6%ad%a3%e5%90%91%e4%bb%a3%e7%90%86%20%28Nginx%20%e9%80%99%e9%82%8a%e6%94%af%e6%8f%b4%20web%20proxy%29%20Nginx%20Fastcgi%20Cache%20proxy_cache%20%e8%88%87%20fastcgi_cache%e5%8a%9f%e8%83%bd%e5%a4%a7%e8%87%b3%e4%b8%80%e6%a8%a3%e3%80%82%20%e7%94%a8%e6%98%af%e7%b7%a9%e5%ad%98fastcgi%e7%94%9f%e6%88%90%e7%9a%84%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%be%88%e5%a4%9a%e6%83%85%e6%b3%81%e6%98%afphp%e7%94%9f%e6%88%90%e7%9a%84%e5%8b%95%e6%85%8b%e7%9a%84%e5%85%a7%e5%ae%b9%e3%80%82%20%e7%b7%a9%e5%ad%98%e4%bd%9c%e7%94%a8%e3%80%82%e6%b8%9b%e5%b0%91%e4%ba%86nginx%e8%88%87Application%28php%2cpython%2ccgi%e7%ad%89%e7%ad%89%29%e9%80%9a%e4%bf%a1%e7%9a%84%e6%ac%a1%e6%95%b8%e3%80%82%20Nginx%20Cache%20%e9%81%8b%e4%bd%9c%e6%b5%81%e7%a8%8b%20Nginx%20%e9%99%a4%e4%ba%86%20work%20Process%20%e7%ae%a1%e7%90%86%20Http%20Request%20%e8%ab%8b%e6%b1%82%e7%ad%89%e5%85%b6%e4%bb%96%e5%b7%a5%e4%bd%9c%e5%a4%96%2cNginx%20Cache%20%e4%b9%9f%e7%94%b1%e5%8f%a6%e5%a4%96%e7%a8%8b%e5%ba%8f%e4%be%86%e4%bd%9c%e7%ae%a1%e7%90%86%e3%80%82%20Nginx%20Cache%20loader%20%e4%b8%bb%e8%a6%81Nginx%20%e4%b8%80%e9%96%8b%e5%a7%8b%e5%88%9d%e5%a7%8b%e5%8c%96%e6%99%82%2c%e6%9c%89%e5%91%bc%e5%8f%abNginx%20Cache%20%e7%9b%b8%e9%97%9c%e6%a8%a1%e7%b5%84%2cNginx%20master%20process%20%e6%9c%83%20fork%20Nginx%20Cache%20loader%20%e5%8e%bb%e6%8a%93%e5%8f%96%20Nginx%20Cache%20Store%28cache%20%e5%84%b2%e5%ad%98%e5%8d%80%29%2c%e4%be%86%e9%87%8d%e6%96%b0%e5%bb%ba%e7%ab%8b%e7%b4%a2%e5%bc%95%28hash%20key%29%e4%b8%a6%e5%ad%98%e6%94%be%e5%9c%a8memory%20%e4%b8%ad%2c%20%e5%bb%ba%e7%ab%8b%e5%ae%8c%e6%88%90%e5%be%8c%2c%20Cache%20loader%20process%20%e5%b0%b1%e9%9a%a8%e5%8d%b3%e7%b5%90%e6%9d%9f%e3%80%82%20Nginx%20Cache%20mamager%20%e4%b8%bb%e8%a6%81%e6%8e%a5%e5%8f%97%20master%20process%20%e6%8c%87%e4%bb%a4%20%e5%8e%bb%e7%ae%a1%e7%90%86%20Nginx%20Cache%20%e5%a4%a7%e5%b0%8f%e4%ba%8b%e5%8b%99%2c%e5%83%8f%e6%98%af%20Hash%20key%20%e9%81%8e%e6%9c%9f%2c%e6%88%96%e6%98%af%e6%90%9c%e5%b0%8b%20%e6%ad%a4%e7%ad%86%e8%b3%87%e6%96%99%e6%98%af%e5%90%a6%e5%ad%98%e6%94%be%e5%9c%a8%20cache%20%e5%84%b2%e5%ad%98%e5%8d%80%e4%b8%ad%20%e7%ad%89%e5%b7%a5%e4%bd%9c%e3%80%82%20Nginx%20Fastcgi%20Cache%20%e7%b0%a1%e8%a6%81%e5%8f%83%e6%95%b8%e8%aa%aa%e6%98%8e%20%e5%9f%b7%e8%a1%8cNginx%20%2b%20lua%20%e4%b9%8b%e5%89%8d%20%e9%9c%80%e8%a6%81%e4%ba%86%e8%a7%a3%e7%9a%84%e4%b8%80%e4%ba%9b%e4%ba%8b%20%e8%bc%89%e5%85%a5%20lua%20%e6%a8%a1%e7%b5%84%2c%20%e6%b8%ac%e8%a9%a6%e6%98%af%e5%90%a6%e5%8f%af%e4%bb%a5%e9%81%8b%e4%bd%9c%201-1...." class="popup">
+          <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://notepage.ali88.idv.tw/NginxFastcgiCache/&amp;title=Nginx_Fastcgi_Cache%20%2b%20Lua%20%e5%9f%b7%e8%a1%8c%e9%81%8e%e7%a8%8b&amp;summary=Nginx%20Proxy%20Cache%20%e6%87%89%e7%94%a8%e6%96%bcReverse%20Proxy%2c%e8%b2%a0%e8%bc%89%e5%9d%87%e8%a1%a1%20%e4%bd%9c%e7%94%a8%e6%98%af%e7%b7%a9%e5%ad%98%e5%be%8c%e7%ab%af%e6%9c%8d%e5%8b%99%e5%99%a8%e7%9a%84%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%8f%af%e8%83%bd%e6%98%af%e4%bb%bb%e4%bd%95%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%8c%85%e6%8b%ac%e9%9d%9c%e6%85%8b%e7%9a%84%e5%92%8c%e5%8b%95%e6%85%8b%20%e5%8f%a6%e5%a4%96%2c%e4%b9%9f%e5%8f%af%e4%bd%9c%e6%ad%a3%e5%90%91%e4%bb%a3%e7%90%86%20%28Nginx%20%e9%80%99%e9%82%8a%e6%94%af%e6%8f%b4%20web%20proxy%29%20Nginx%20Fastcgi%20Cache%20proxy_cache%20%e8%88%87%20fastcgi_cache%e5%8a%9f%e8%83%bd%e5%a4%a7%e8%87%b3%e4%b8%80%e6%a8%a3%e3%80%82%20%e7%94%a8%e6%98%af%e7%b7%a9%e5%ad%98fastcgi%e7%94%9f%e6%88%90%e7%9a%84%e5%85%a7%e5%ae%b9%ef%bc%8c%e5%be%88%e5%a4%9a%e6%83%85%e6%b3%81%e6%98%afphp%e7%94%9f%e6%88%90%e7%9a%84%e5%8b%95%e6%85%8b%e7%9a%84%e5%85%a7%e5%ae%b9%e3%80%82%20%e7%b7%a9%e5%ad%98%e4%bd%9c%e7%94%a8%e3%80%82%e6%b8%9b%e5%b0%91%e4%ba%86nginx%e8%88%87Application%28php%2cpython%2ccgi%e7%ad%89%e7%ad%89%29%e9%80%9a%e4%bf%a1%e7%9a%84%e6%ac%a1%e6%95%b8%e3%80%82%20Nginx%20Cache%20%e9%81%8b%e4%bd%9c%e6%b5%81%e7%a8%8b%20Nginx%20%e9%99%a4%e4%ba%86%20work%20Process%20%e7%ae%a1%e7%90%86%20Http%20Request%20%e8%ab%8b%e6%b1%82%e7%ad%89%e5%85%b6%e4%bb%96%e5%b7%a5%e4%bd%9c%e5%a4%96%2cNginx%20Cache%20%e4%b9%9f%e7%94%b1%e5%8f%a6%e5%a4%96%e7%a8%8b%e5%ba%8f%e4%be%86%e4%bd%9c%e7%ae%a1%e7%90%86%e3%80%82%20Nginx%20Cache%20loader%20%e4%b8%bb%e8%a6%81Nginx%20%e4%b8%80%e9%96%8b%e5%a7%8b%e5%88%9d%e5%a7%8b%e5%8c%96%e6%99%82%2c%e6%9c%89%e5%91%bc%e5%8f%abNginx%20Cache%20%e7%9b%b8%e9%97%9c%e6%a8%a1%e7%b5%84%2cNginx%20master%20process%20%e6%9c%83%20fork%20Nginx%20Cache%20loader%20%e5%8e%bb%e6%8a%93%e5%8f%96%20Nginx%20Cache%20Store%28cache%20%e5%84%b2%e5%ad%98%e5%8d%80%29%2c%e4%be%86%e9%87%8d%e6%96%b0%e5%bb%ba%e7%ab%8b%e7%b4%a2%e5%bc%95%28hash%20key%29%e4%b8%a6%e5%ad%98%e6%94%be%e5%9c%a8memory%20%e4%b8%ad%2c%20%e5%bb%ba%e7%ab%8b%e5%ae%8c%e6%88%90%e5%be%8c%2c%20Cache%20loader%20process%20%e5%b0%b1%e9%9a%a8%e5%8d%b3%e7%b5%90%e6%9d%9f%e3%80%82%20Nginx%20Cache%20mamager%20%e4%b8%bb%e8%a6%81%e6%8e%a5%e5%8f%97%20master%20process%20%e6%8c%87%e4%bb%a4%20%e5%8e%bb%e7%ae%a1%e7%90%86%20Nginx%20Cache%20%e5%a4%a7%e5%b0%8f%e4%ba%8b%e5%8b%99%2c%e5%83%8f%e6%98%af%20Hash%20key%20%e9%81%8e%e6%9c%9f%2c%e6%88%96%e6%98%af%e6%90%9c%e5%b0%8b%20%e6%ad%a4%e7%ad%86%e8%b3%87%e6%96%99%e6%98%af%e5%90%a6%e5%ad%98%e6%94%be%e5%9c%a8%20cache%20%e5%84%b2%e5%ad%98%e5%8d%80%e4%b8%ad%20%e7%ad%89%e5%b7%a5%e4%bd%9c%e3%80%82%20Nginx%20Fastcgi%20Cache%20%e7%b0%a1%e8%a6%81%e5%8f%83%e6%95%b8%e8%aa%aa%e6%98%8e%20http%7b%20......." class="popup">
               <span class="icon">
                   <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve">
                       <path d="M25.424,15.887v8.447h-4.896v-7.882c0-1.979-0.709-3.331-2.48-3.331c-1.354,0-2.158,0.911-2.514,1.803 c-0.129,0.315-0.162,0.753-0.162,1.194v8.216h-4.899c0,0,0.066-13.349,0-14.731h4.899v2.088c-0.01,0.016-0.023,0.032-0.033,0.048 h0.033V11.69c0.65-1.002,1.812-2.435,4.414-2.435C23.008,9.254,25.424,11.361,25.424,15.887z M5.348,2.501 c-1.676,0-2.772,1.092-2.772,2.539c0,1.421,1.066,2.538,2.717,2.546h0.032c1.709,0,2.771-1.132,2.771-2.546 C8.054,3.593,7.019,2.501,5.343,2.501H5.348z M2.867,24.334h4.897V9.603H2.867V24.334z"/>
