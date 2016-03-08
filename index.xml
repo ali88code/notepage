@@ -437,11 +437,15 @@ server {
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;keys_zone=democache:10m                   **為cache 空間設定名字為 democache , 此空間10MB  **&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;keys_zone=democache:10m                   **為cache 空間設定名字為 democache , 此空間10MB  **&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;max_size=1000m                     &lt;strong&gt;最大使用1G空間&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;ul&gt;
+&lt;li&gt;10MB 是儲存在 share memory,,比較常存取(hot data)會被儲存在share memory&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;inactive=60s                      &lt;strong&gt;cache 1分鐘&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;max_size=1000m                     &lt;strong&gt;最大使用1G空間 ,是指定儲存cache的容量&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;inactive=60s                      &lt;strong&gt;cache 1分鐘,預設值10分鐘&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;fastcgi-cache-key:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_cache_key&lt;/h3&gt;
@@ -467,6 +471,30 @@ server {
 
 &lt;li&gt;&lt;p&gt;若只有指定時間。預設只有 http code  :200, 301, and 302 等回應狀態會被快取
 ex: 當Nginx 收到回應程式 http 狀態碼 200 時,就快取 1 小時&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;fastcgi-cache-use-stale:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_cache_use_stale&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;定義那些情況使用過期cache&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;invalid_header  無效的回應&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;error       回應的Header 發生錯誤&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;http_500    回應500錯誤&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;time        當Nginx 與 Application 建立連接時,Nginx 等待 Application 回應超時&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;fastcgi-ignore-headers:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_ignore_headers&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;忽略 Http header 帶有 Cache-Control , Expires ,Set-Cookie&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;若從後端 Application回應 http header 帶有Cache-Control , Expires ,Set-Cookie 會影響fastcgi_cache 不會cache 回應資料&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;fastcgi-no-cache:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;fastcgi_no_cache&lt;/h3&gt;
@@ -734,6 +762,8 @@ http://220.229.227.26/other_sport/A0017_0050/wlb/
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://czerasz.com/2015/03/30/nginx-caching-tutorial/&#34;&gt;Nginx Caching Tutorial - You Can Run Faster&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://blog.angryfox.com/?p=1930&#34;&gt;Nginx的緩存：proxy_cache和fastcgi_cache&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.cnxct.com/several-reminder-in-nginx-fastcgi_cache-and-php-session_cache_limiter/&#34;&gt;Nginx模塊fastcgi_cache的幾個注意點&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://281816327.blog.51cto.com/907015/1619920&#34;&gt;Nginx模塊和請求處理流程簡介&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 
