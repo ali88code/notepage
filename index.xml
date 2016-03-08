@@ -509,6 +509,49 @@ ex: 當Nginx 收到回應程式 http 狀態碼 200 時,就快取 1 小時&lt;/p&
 &lt;li&gt;不等於空值 及 值不等於 0 ,即是 不從cache區 回應資料給Client端,而是 By_Pass 到後端 。 &lt;strong&gt;只要是 0 或 空值 就指定 cache&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h2 id=&#34;upstream-cache-status-包含以下幾種狀態:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;$upstream_cache_status 包含以下幾種狀態&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;狀態&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;說明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;MISS&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;未命中，請求被傳送到後端&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;HIT&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;緩存命中&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;EXPIRED&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;緩存已經過期請求被傳送到後端&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;UPDATING&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;正在更新緩存，將使用舊的應答&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;STALE&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;後端將得到過期的應答&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;BYPASS&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;request會By_Pass到後端伺服器上,因為請求匹配了一個proxy_cache_bypass 或是 fastcgi_cache_bypass&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
 &lt;h1 id=&#34;執行nginx-lua-之前-需要了解的一些事:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;執行Nginx + lua 之前 需要了解的一些事&lt;/h1&gt;
 
 &lt;h3 id=&#34;載入-lua-模組-測試是否可以運作:1246daae3ebb4ac275b8ba8e055bf6ad&#34;&gt;載入 lua 模組, 測試是否可以運作&lt;/h3&gt;
@@ -749,7 +792,7 @@ http://220.229.227.26/other_sport/A0017_0050/wlb/
 &lt;/ul&gt;
 
 &lt;pre&gt;&lt;code&gt;用Firefox 瀏覽此url 並登入 http://220.229.227.26/other_sport/A0017_0050/om/
-執行設定會被cache的url http://220.229.227.26/other_sport/A0017_0050/om/league-listing.php (看 /var/log/nginx/localhost-demo_cache-access.log 是否有hit到,有被Hit到 就馬上執行第三步驟)
+執行設定會被cache的url http://220.229.227.26/other_sport/A0017_0050/om/league-listing.php (看 /var/log/nginx/localhost-demo_cache-access.log 是否有hit到,有被Hit到 就馬上執行下一個步驟)
 用IE 瀏覽此url 並登入 http://220.229.227.26/other_sport/A0017_0050/wlb/
 再瀏覽此url http://220.229.227.26/other_sport/A0017_0050/om/league-listing.php,就發生未登入即可以抓取的到頁面。
 &lt;/code&gt;&lt;/pre&gt;
